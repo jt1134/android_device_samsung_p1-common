@@ -69,17 +69,17 @@ PRODUCT_COPY_FILES += \
 	device/samsung/p1-common/prebuilt/etc/media_codecs.xml:system/etc/media_codecs.xml
 
 # These are the OpenMAX IL modules
-#PRODUCT_PACKAGES += \
-#	libSEC_OMX_Core.s5pc110 \
-#	libOMX.SEC.AVC.Decoder.s5pc110 \
-#	libOMX.SEC.M4V.Decoder.s5pc110 \
-#	libOMX.SEC.M4V.Encoder.s5pc110 \
-#	libOMX.SEC.AVC.Encoder.s5pc110
+PRODUCT_PACKAGES += \
+	libSEC_OMX_Core.s5pc110 \
+	libOMX.SEC.AVC.Decoder.s5pc110 \
+	libOMX.SEC.M4V.Decoder.s5pc110 \
+	libOMX.SEC.M4V.Encoder.s5pc110 \
+	libOMX.SEC.AVC.Encoder.s5pc110
 
 # Libs
-#PRODUCT_PACKAGES += \
-#	hwcomposer.s5pc110 \
-#	libstagefrighthw
+PRODUCT_PACKAGES += \
+	hwcomposer.s5pc110 \
+	libstagefrighthw
 
 # tvout
 PRODUCT_PACKAGES += \
