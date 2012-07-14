@@ -48,7 +48,7 @@ static int write_int (const char* path, int value) {
 	fd = open(path, O_WRONLY);
 	if (fd < 0) {
 		if (already_warned == 0) {
-			LOGE("write_int failed to open %s\n", path);
+			ALOGE("write_int failed to open %s\n", path);
 			already_warned = 1;
 		}
 		return -errno;
@@ -93,7 +93,7 @@ static int set_light_backlight(struct light_device_t* dev,
 		struct light_state_t const* state) {
 	int err = 0;
 	int brightness = rgb_to_brightness(state);
-	LOGV("%s brightness=%d color=0x%08x",
+	ALOGV("%s brightness=%d color=0x%08x",
 		__func__,brightness, state->color);
 	pthread_mutex_lock(&g_lock);
 	err = write_int(LCD_BACKLIGHT_FILE, brightness);
@@ -114,7 +114,7 @@ set_light_notifications(struct light_device_t* dev,
 {
 	int err = 0;
 	int on = is_lit(state);
-	LOGV("%s color=%08x flashMode=%d flashOnMS=%d flashOffMS=%d\n", __func__,
+	ALOGV("%s color=%08x flashMode=%d flashOnMS=%d flashOffMS=%d\n", __func__,
 	     state->color, state->flashMode, state->flashOnMS, state->flashOffMS);
 	pthread_mutex_lock(&g_lock);
 	err = write_int(BUTTON_FILE, on?255:0);
@@ -167,7 +167,7 @@ static struct hw_module_methods_t lights_module_methods = {
 };
 
 
-const struct hw_module_t HAL_MODULE_INFO_SYM = {
+struct hw_module_t HAL_MODULE_INFO_SYM = {
 	.tag = HARDWARE_MODULE_TAG,
 	.version_major = 1,
 	.version_minor = 0,
