@@ -21,14 +21,13 @@
 # Set this up here so that BoardVendorConfig.mk can override it
 BOARD_USES_GENERIC_AUDIO := false
 
-BOARD_PROVIDES_LIBRIL := true
+#BOARD_PROVIDES_LIBRIL := true
 BOARD_USES_LIBSECRIL_STUB := true
 
 # ARMv7-A Cortex-A8 architecture
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
-ARCH_ARM_HAVE_TLS_REGISTER := true
 ARCH_ARM_HAVE_TLS_REGISTER := true
 
 TARGET_NO_BOOTLOADER := true
@@ -55,7 +54,7 @@ BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
 BOARD_HOSTAPD_DRIVER        := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_bcmdhd
 BOARD_WLAN_DEVICE           := bcmdhd
-BOARD_WLAN_DEVICE_REV       := bcm4329
+#BOARD_WLAN_DEVICE_REV       := bcm4329
 WIFI_DRIVER_MODULE_NAME     := "bcmdhd"
 WIFI_DRIVER_FW_PATH_PARAM   := "/sys/module/bcmdhd/parameters/firmware_path"
 WIFI_DRIVER_FW_PATH_STA     := "/vendor/firmware/fw_bcmdhd.bin"
@@ -73,6 +72,9 @@ BOARD_SECOND_CAMERA_DEVICE := /dev/video2
 # OpenGL stuff
 BOARD_EGL_CFG := device/samsung/p1-common/prebuilt/lib/egl/egl.cfg
 USE_OPENGL_RENDERER := true
+TARGET_DISABLE_TRIPLE_BUFFERING := false
+BOARD_ALLOW_EGL_HIBERNATION := true
+DEFAULT_FB_NUM := 2
 
 # skia
 BOARD_USE_SKIA_LCDTEXT := true
