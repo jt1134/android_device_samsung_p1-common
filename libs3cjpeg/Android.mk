@@ -29,7 +29,7 @@ LOCAL_MODULE:= libs3cjpeg
 
 LOCAL_MODULE_TAGS := optional
 
-LOCAL_PRELINK_MODULE := false
+#LOCAL_PRELINK_MODULE := false
 
 include $(BUILD_SHARED_LIBRARY)
 
