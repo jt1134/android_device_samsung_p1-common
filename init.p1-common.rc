@@ -72,13 +72,6 @@ on boot
     setprop ro.radio.noril yes
     setprop ro.telephony.call_ring.multiple 0
 
-service p1-ril-daemon /system/bin/rild
-    class core
-    socket rild stream 660 root radio
-    socket rild-debug stream 660 radio system
-    user root
-    group radio cache inet misc audio sdcard_rw log
-
 # 3D init
 service pvrsrvinit /system/bin/pvrsrvinit
     class core
