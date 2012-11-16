@@ -19,7 +19,6 @@
 #include <cutils/log.h>
 #include <stdint.h>
 #include <string.h>
-#include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <pthread.h>
@@ -61,40 +60,28 @@ static int write_int(char const *path, int value)
 static int rgb_to_brightness(struct light_state_t const* state)
 {
     int color = state->color & 0x00ffffff;
+
     return ((77*((color>>16)&0x00ff))
             + (150*((color>>8)&0x00ff)) + (29*(color&0x00ff))) >> 8;
-}
-
-void init_globals (void) {
-	pthread_mutex_init (&g_lock, NULL);
-}
-
-static int is_lit (struct light_state_t const* state) {
-	return state->color & 0x00ffffff;
 }
 
 static int set_light_notifications(struct light_device_t* dev,
 			struct light_state_t const* state)
 {
-	int err = 0;
-	int on = is_lit(state);
-	ALOGV("%s color=%08x flashMode=%d flashOnMS=%d flashOffMS=%d\n", __func__,
-	     state->color, state->flashMode, state->flashOnMS, state->flashOffMS);
+	int brightness = rgb_to_brightness(state);
+	int ret, v = 0;
 	pthread_mutex_lock(&g_lock);
-	err = write_int(BUTTON_FILE, on?255:0);
+
+	if (brightness+state->color == 0 || brightness > 100) {
+		if (state->color & 0x00ffffff)
+			v = 1;
+	} else
+		v = 0;
+
+	ALOGI("color %u fm %u status %u is lit %u brightness", state->color, state->flashMode, v, (state->color & 0x00ffffff), brightness);
+	ret = write_int(BUTTON_FILE, v);
 	pthread_mutex_unlock(&g_lock);
-	return err;
-}
-
-static int set_light_buttons (struct light_device_t* dev,
-		struct light_state_t const* state) {
-	int err = 0;
-	int on = is_lit (state);
-	pthread_mutex_lock (&g_lock);
-	err = write_int (BUTTON_FILE, on?255:0);
-	pthread_mutex_unlock (&g_lock);
-
-	return 0;
+	return ret;
 }
 
 static int set_light_backlight(struct light_device_t* dev,
@@ -105,13 +92,6 @@ static int set_light_backlight(struct light_device_t* dev,
 		__func__,brightness, state->color);
 	pthread_mutex_lock(&g_lock);
 	err = write_int(LCD_BACKLIGHT_FILE, brightness);
-	// if LCD backlight is on then button backlight should be on too
-	// Samsung has some annoying code that turns on buttons light only when touchscreen is pressed
-	// and it turns off automatically afterwards, leaving user hunting for buttons in the dark
-	{
-	    int on = is_lit (state);
-	    err = write_int (BUTTON_FILE, on?255:0);
-	}
 	pthread_mutex_unlock(&g_lock);
 	return err;
 }
@@ -139,7 +119,7 @@ static int open_lights(const struct hw_module_t *module, char const *name,
 	else
 		return -EINVAL;
 
-	pthread_once(&g_init, init_globals);
+	pthread_mutex_init(&g_lock, NULL);
 
 	struct light_device_t *dev = malloc(sizeof(struct light_device_t));
 	memset(dev, 0, sizeof(*dev));
