@@ -39,11 +39,13 @@ export PATH=/:/sbin:/system/xbin:/system/bin:/tmp:$PATH
 if /tmp/busybox test "$1" = cdma ; then
     # CDMA mode
     IS_GSM='/tmp/busybox false'
+    DATA_PART='/dev/block/mmcblk0p2 /dev/block/mmcblk0p3'
     SD_PART='/dev/block/mmcblk1p1'
     MTD_SIZE='490733568'
 else
     # GSM mode
     IS_GSM='/tmp/busybox true'
+    DATA_PART='/dev/block/mmcblk0p2'
     SD_PART='/dev/block/mmcblk0p1'
     MTD_SIZE='454557696'
     EFS_PART=`/tmp/busybox grep efs /proc/mtd | /tmp/busybox awk '{print $1}' | /tmp/busybox sed 's/://g' | /tmp/busybox sed 's/mtd/mtdblock/g'`
@@ -221,7 +223,16 @@ elif /tmp/busybox test -e /dev/block/mtdblock0 ; then
     /tmp/busybox umount -l /data
     /tmp/busybox umount -l /system
 
-    /tmp/make_ext4fs -b 4096 -g 32768 -i 8192 -I 256 -a /data /dev/block/mmcblk0p2
+    if $IS_GSM ; then
+        /tmp/make_ext4fs -b 4096 -g 32768 -i 8192 -I 256 -a /data $DATA_PART
+    else
+        # setup LVM volumes
+        /lvm/sbin/lvm pvcreate $DATA_PART
+        /lvm/sbin/lvm vgcreate lvpool $DATA_PART
+        /lvm/sbin/lvm lvcreate -l 100%FREE -n userdata lvpool
+        /tmp/make_ext4fs -b 4096 -g 32768 -i 8192 -I 256 -a /data /dev/lvpool/userdata
+    fi
+
     /tmp/erase_image system
 
     # restart into recovery so the user can install further packages before booting
