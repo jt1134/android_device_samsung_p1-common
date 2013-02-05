@@ -65,10 +65,6 @@ on boot
     setprop status.battery.level_raw  50
     setprop status.battery.level_scale 9
 
-    # phone
-    setprop ro.radio.noril yes
-    setprop ro.telephony.call_ring.multiple 0
-
 # 3D init
 service pvrsrvinit /system/bin/pvrsrvinit
     class core
