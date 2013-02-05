@@ -37,7 +37,7 @@ public class ToggleCapacitiveKeys implements OnPreferenceChangeListener {
         }
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Utils.writeValue(FILE, (sharedPrefs.getBoolean(DeviceSettings.KEY_BUTTONS_DISABLE, false) ? "0" : "1"));
+        Utils.writeValue(FILE, (sharedPrefs.getBoolean(DeviceSettings.KEY_BUTTONS_DISABLE, true) ? "0" : "1"));
     }
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
