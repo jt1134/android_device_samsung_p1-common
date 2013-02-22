@@ -101,6 +101,12 @@ BOARD_CUSTOM_GRAPHICS := ../../../device/samsung/p1-common/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/p1-common/recovery/keys.c
 BOARD_USES_BML_OVER_MTD := true
 
+# TWRP
+DEVICE_RESOLUTION := 1024x600
+TW_NO_REBOOT_BOOTLOADER := true
+RECOVERY_TOUCHSCREEN_SWAP_XY := true
+RECOVERY_TOUCHSCREEN_FLIP_X := true
+
 # Samsung EMMC brick bug
 # Already disabled in kernel, but disable again for safety
 BOARD_SUPPRESS_EMMC_WIPE := true
